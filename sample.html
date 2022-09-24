@@ -1,0 +1,27 @@
+<html>
+    <head>
+        <script type="module" src="tableau-graphql.js"></script>
+    </head>
+    <body>
+    </body>
+    <script>
+        window.addEventListener('load', () => {
+            setGraphqlEndpoint('https://api.spacex.land/graphql/');
+    
+            const query = gql`
+                {
+                    company {
+                    ceo
+                    }
+                    roadster {
+                    apoapsis_au
+                    }
+                }
+                `
+        
+            getGraphqlResponse(query).then((data) => {
+                console.log(data);
+            })
+        });
+    </script>
+</html>
