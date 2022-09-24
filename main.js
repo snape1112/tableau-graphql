@@ -6,11 +6,14 @@ const setGraphqlEndpoint = (url) => {
   graphql_endpoint = url;
 }
 
+
 const getGraphqlResponse = (query) => {
   return request(graphql_endpoint, query);
 }
 
-export { gql, setGraphqlEndpoint, getGraphqlResponse };
+window.gql = gql;
+window.setGraphqlEndpoint = setGraphqlEndpoint;
+window.getGraphqlResponse = getGraphqlResponse;
 
 // setGraphqlEndpoint('https://api.spacex.land/graphql/');
 
