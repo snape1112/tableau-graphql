@@ -1,14 +1,30 @@
 import { request, gql } from 'graphql-request'
 
-const query = gql`
-  {
-    company {
-      ceo
-    }
-    roadster {
-      apoapsis_au
-    }
-  }
-`
+var graphql_endpoint = null;
 
-request('https://api.spacex.land/graphql/', query).then((data) => console.log(data))
+const setGraphqlEndpoint = (url) => {
+  graphql_endpoint = url;
+}
+
+const getGraphqlResponse = (query) => {
+  return request(graphql_endpoint, query);
+}
+
+export { gql, setGraphqlEndpoint, getGraphqlResponse };
+
+// setGraphqlEndpoint('https://api.spacex.land/graphql/');
+
+// const query = gql`
+//   {
+//     company {
+//       ceo
+//     }
+//     roadster {
+//       apoapsis_au
+//     }
+//   }
+// `
+
+// getGraphqlResponse(query).then((data) => {
+//   console.log(data);
+// })
