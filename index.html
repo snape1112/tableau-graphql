@@ -1,27 +1,68 @@
 <html>
-    <head>
-        <script type="module" src="tableau-graphql.js"></script>
-    </head>
-    <body>
-    </body>
-    <script>
-        window.addEventListener('load', () => {
-            setGraphqlEndpoint('https://api.spacex.land/graphql/');
-    
-            const query = gql`
-                {
-                    company {
-                    ceo
+  <head>
+    <script type="module" src="tableau-graphql.js"></script>
+  </head>
+  <body>
+  </body>
+  <script>
+    const analyzeDatasources = (data) => {
+      console.log(data);
+      data.datasources.map((datasource) => {
+        let fields = [];
+        let queries = {};
+        datasource.fields.map((field) => {
+          fields.push(field.name);
+          if (field.columns && field.columns.length) {
+            let table = field.columns[0].table;
+            queries[table.name] = table.query;
+          }
+        })
+        datasource.fields = fields;
+        datasource.queries = queries;
+      })
+      console.log("finished");
+      console.log(datasource);
+    }
+
+    const loadDatasources = () => {
+      const query = gql`
+        datasources {
+          name
+          hasExtracts
+          extractLastRefreshTime
+          site {
+            name
+          }
+          projectName
+          owner {
+            name
+          }
+          upstreamDatabases {
+            name
+            connectionType
+          }
+          fields{
+              name
+              ...on ColumnField{
+                columns{
+                  table{
+                    ...on CustomSQLTable{
+                      name
+                      query
                     }
-                    roadster {
-                    apoapsis_au
-                    }
+                  }
                 }
-                `
-        
-            getGraphqlResponse(query).then((data) => {
-                console.log(data);
-            })
-        });
-    </script>
+              }
+            }
+        }
+      `;
+
+      getGraphqlResponse(query).then(analyzeDatasources)
+    }
+
+    window.addEventListener('load', () => {
+      setGraphqlEndpoint('https://tableau.lincare.com/api/metadata/graphql');
+      loadDatasources();
+    });
+  </script>
 </html>
